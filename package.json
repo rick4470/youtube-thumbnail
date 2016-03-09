@@ -1,0 +1,15 @@
+{
+  "name": "youtube-thumbnail",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gm": "^1.21.1",
+    "images": "^2.1.11"
+  }
+}
