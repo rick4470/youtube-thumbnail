@@ -42,7 +42,7 @@ if (args) {
         .fill('#233140')
         .font('Helvetica.ttf', fontSize)
         .drawText(x, y, title)
-        .write('./images/output.jpg', function (err) {
+        .write('output.jpg', function (err) {
             if (!err) console.log('done');
         });
 
