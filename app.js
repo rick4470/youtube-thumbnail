@@ -1,51 +1,76 @@
-var images = require('images');
-var gm = require('gm');
-var args = process.argv.slice(2);
-args = args[0];
+const images = require('images');
+const gm = require('gm');
+const async = require('async');
+const args = process.argv.slice(2)[0];
 
 if (args) {
-    var title = args.substring(args.indexOf('=') + 1, args.length);
+    const title = args.substring(args.indexOf('=') + 1, args.length);
 
     images('./images/base.png')
         .resize(1280, 720)
         .draw(images('./images/layer.png'), 0, 0)
-        .save('./images/output.jpg');
+        .save('./images/thumbnail.jpg');
 
-    var wordCount = title.split(/\s+/).length;
+    let x = 800;
+    let y;
+    let fontSize = 300;
+    const words = title.split(/\s+/);
+    const stack = [];
 
-    var x = 0;
-    var y = 92;
-    var fontSize = 100;
+    words.forEach((word, index) => {
 
-    switch (wordCount) {
-        case 2:
-            x = 170
-            break;
-        case 3:
-            if (title.length > 15) {
-                x = 25;
-            } else {
-                x = 180;
-            }
-            break;
-        case 4:
-            x = 0;
-            break;
-        case 5:
-            fontSize = 80;
-            x = 0;
-            break;
+        y = 150 * (index + 1);
+        if (words.length === 3) {
+            y += 110;
+        }
+
+        if (word.length === 5) {
+            fontSize = 150;
+        }
+        if (word.length === 6) {
+            fontSize = 140;
+        }
+        stack.push({
+            x: x,
+            y: y,
+            size: fontSize,
+            word: word
+        });
+    });
+
+    writeImage(0);
+    console.log('Enjoy your new thumbnail :)');
+
+    function writeImage(index, err) {
+        if (err || !validIndex(index)) {
+            return;
+        }
+        if (validIndex(index)) {
+            const image = stack[index];
+            gm('./images/thumbnail.jpg')
+                .stroke("#333")
+                .fill('#fff')
+                .font('Helvetica.ttf', image.size)
+                .drawText(image.x, image.y, image.word)
+                .write('./images/thumbnail.jpg', (err) => {
+                    if (err) {
+                        writeImage(image, err);
+                    } else {
+                        // No errors to report back
+                        writeImage((index + 1));
+                    }
+                });
+        }
     }
 
-    gm('./images/output.jpg')
-        .stroke("#7EB2E5")
-        .fill('#233140')
-        .font('Helvetica.ttf', fontSize)
-        .drawText(x, y, title)
-        .write('output.jpg', function (err) {
-            if (!err) console.log('done');
-        });
+    function validIndex(index) {
+        if (stack[index] !== undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 } else {
-    console.log('Title is required!: use title="enter title here"');
+    console.log('Title is required!: node app.js title="Enter the name of the Title"');
 }
