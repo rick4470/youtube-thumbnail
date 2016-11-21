@@ -11,25 +11,45 @@ if (args) {
         .draw(images('./images/layer.png'), 0, 0)
         .save('./images/thumbnail.jpg');
 
-    let x = 800;
+    let x = 650;
     let y;
-    let fontSize = 300;
+    let fontSize;
     const words = title.split(/\s+/);
     const stack = [];
 
     words.forEach((word, index) => {
 
-        y = 150 * (index + 1);
-        if (words.length === 3) {
-            y += 110;
+        y = 180 * (index + 1);
+        y += 60;
+
+        if (word.length === 3) {
+            fontSize = 220;
+        }
+
+        if (word.length === 4) {
+            fontSize = 220;
         }
 
         if (word.length === 5) {
-            fontSize = 150;
+            fontSize = 180;
         }
         if (word.length === 6) {
-            fontSize = 140;
+            fontSize = 170;
         }
+        if (word.length === 7) {
+            fontSize = 150;
+        }
+
+        if (word.length === 8) {
+            y -= 40;
+            fontSize = 150;
+        }
+
+        if (word.length === 11) {
+            y -= 120;
+            fontSize = 90;
+        }
+        console.log(word.length);
         stack.push({
             x: x,
             y: y,
@@ -37,7 +57,15 @@ if (args) {
             word: word
         });
     });
-
+    stack.forEach((item, index) => {
+        if (item.word.length === 1) {
+            if (stack[index - 1]) {
+                //Removes item from array with just one letter
+                stack[index - 1].word = stack[index - 1].word + ' ' + item.word;
+                stack.splice(index, 1);
+            }
+        }
+    });
     writeImage(0);
     console.log('Enjoy your new thumbnail :)');
 
