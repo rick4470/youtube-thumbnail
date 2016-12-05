@@ -1,6 +1,5 @@
 const images = require('images');
 const gm = require('gm');
-const async = require('async');
 const args = process.argv.slice(2)[0];
 
 if (args) {
@@ -48,6 +47,11 @@ if (args) {
         if (word.length === 11) {
             y -= 120;
             fontSize = 90;
+        }
+
+        if (word.length === 12) {
+            y -= 50;
+            fontSize = 100;
         }
         console.log(word.length);
         stack.push({
